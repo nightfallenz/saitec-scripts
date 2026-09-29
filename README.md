@@ -43,42 +43,65 @@ Por isso o menu é aberto **sem** elevação. Se você abrir o PowerShell com a 
 |---|---|---|---|
 | 1 | Impressoras | `Reset-Spooler.ps1` | Fila presa, impressora não imprime |
 | 2 | Impressoras | `Gerenciar-Impressoras.ps1` | Driver corrompido, impressora duplicada, reinstalação limpa |
-| 3 | Rede | `Diagnostico-Rede.ps1` | Primeiro passo em "sem internet". Não altera nada |
-| 4 | Rede | `Reset-Rede.ps1` | DNS falhando, rede não identificada. Pede reinício |
-| 5 | Sistema | `Info-Sistema.ps1` | Ficha da máquina (serial, modelo, IP) copiada para colar no chamado |
-| 6 | Sistema | `Reparar-Windows.ps1` | DISM + SFC: tela azul, erro de DLL, apps nativos quebrados |
-| 7 | Sistema | `Reset-WindowsUpdate.ps1` | Update travado ou com erro 0x8024... / 0x800f... |
-| 8 | Sistema | `Limpeza-Rapida.ps1` | Disco cheio |
-| 9 | Sistema | `Reiniciar-Explorer.ps1` | Barra de tarefas ou menu Iniciar travado, ícones errados |
-| 10 | Sistema | `Manutencao_Windows.bat` | Manutenção preventiva completa, com menu próprio e log |
-| 11 | Office | `Limpar-Teams.ps1` | Teams com tela branca, não abre, loop de login |
-| 12 | Office | `Limpar-Credenciais-Office.ps1` | Outlook pedindo senha em loop, conta errada presa |
-| 13 | Office | `Reset-OneDrive.ps1` | Sincronização parada. Não apaga arquivos |
-| 14 | Office | `Reparar-Office.ps1` | Reparo rápido ou online do Microsoft 365 |
-| 15 | Ferramentas | `Instalar-Ferramentas.ps1` | Instala programas de suporte via winget |
-| 16 | Ferramentas | Chris Titus WinUtil | Debloat e otimização. Oficialmente só Windows 11 |
+| 3 | Impressoras | `Adicionar-Impressora-IP.ps1` | Instalar impressora de rede direto pelo IP |
+| 4 | Rede | `Diagnostico-Rede.ps1` | Primeiro passo em "sem internet". Não altera nada |
+| 5 | Rede | `Reset-Rede.ps1` | DNS falhando, rede não identificada. Pede reinício |
+| 6 | Domínio | `Corrigir-Wallpaper-Dominio.ps1` | Wallpaper da GPO preto ou não aplica. Testa o acesso ao arquivo do NETLOGON e limpa o `TranscodedWallpaper` |
+| 7 | Domínio | `Atualizar-GPO.ps1` | `gpupdate /force` e relatório HTML do `gpresult` |
+| 8 | Domínio | `Unidades-Rede.ps1` | Unidade mapeada com X vermelho, pasta do setor sumiu |
+| 9 | Domínio | `Reparar-Relacao-Dominio.ps1` | "A relação de confiança... falhou", sem tirar do domínio |
+| 10 | Domínio | `Sincronizar-Hora.ps1` | Hora errada, erro de Kerberos no logon |
+| 11 | Domínio | `Perfil-Temporario.ps1` | "Conectado com perfil temporário". Faz backup do registro antes |
+| 12 | Sistema | `Info-Sistema.ps1` | Ficha da máquina (serial, modelo, IP) copiada para colar no chamado |
+| 13 | Sistema | `Reparar-Windows.ps1` | DISM + SFC: tela azul, erro de DLL, apps nativos quebrados |
+| 14 | Sistema | `Reset-WindowsUpdate.ps1` | Update travado ou com erro 0x8024... / 0x800f... |
+| 15 | Sistema | `Limpeza-Rapida.ps1` | Disco cheio |
+| 16 | Sistema | `Saude-Disco.ps1` | Desgaste do SSD, erros de leitura, temperatura, eventos de disco |
+| 17 | Sistema | `Status-BitLocker.ps1` | Status e ID da chave de recuperação |
+| 18 | Sistema | `Inicializacao-Rapida.ps1` | Uptime alto mesmo desligando, update que nunca termina |
+| 19 | Sistema | `Reiniciar-Explorer.ps1` | Barra de tarefas ou menu Iniciar travado, ícones errados |
+| 20 | Sistema | `Reparar-Store-Apps.ps1` | Store, Calculadora ou Fotos não abrem |
+| 21 | Sistema | `Manutencao_Windows.bat` | Manutenção preventiva completa, com menu próprio e log |
+| 22 | Office | `Limpar-Teams.ps1` | Teams com tela branca, não abre, loop de login |
+| 23 | Office | `Limpar-Credenciais-Office.ps1` | Outlook pedindo senha em loop, conta errada presa |
+| 24 | Office | `Reset-OneDrive.ps1` | Sincronização parada. Não apaga arquivos |
+| 25 | Office | `Reparar-Office.ps1` | Reparo rápido ou online do Microsoft 365 |
+| 26 | Ferramentas | `Instalar-Ferramentas.ps1` | Instala programas de suporte via winget |
+| 27 | Ferramentas | Chris Titus WinUtil | Debloat e otimização. Oficialmente só Windows 11 |
 
-## Ferramentas instaladas pelo menu (item 15)
+## Ferramentas instaladas pelo menu (item 26)
 
-Todas vêm do catálogo oficial do winget, direto da fonte de cada fabricante.
+Todas vêm do catálogo oficial do winget, direto da fonte de cada fabricante. **[OSS]** marca as de código aberto.
 
 | Ferramenta | Para que serve | Site oficial |
 |---|---|---|
-| 7-Zip | Compactar e extrair | https://www.7-zip.org |
+| 7-Zip [OSS] | Compactar e extrair | https://www.7-zip.org |
 | AnyDesk | Acesso remoto | https://anydesk.com |
 | TeamViewer | Acesso remoto | https://www.teamviewer.com |
-| CrystalDiskInfo | Saúde do SSD/HD (SMART) | https://crystalmark.info |
+| CrystalDiskInfo [OSS] | Saúde do SSD/HD (SMART) | https://crystalmark.info |
+| CrystalDiskMark [OSS] | Velocidade do disco | https://crystalmark.info |
 | Sysinternals Suite | Process Explorer, Autoruns, TCPView | https://learn.microsoft.com/sysinternals |
 | Advanced IP Scanner | Varredura da rede | https://www.advanced-ip-scanner.com |
-| Notepad++ | Editor de texto e logs | https://notepad-plus-plus.org |
-| Rufus | Pendrive bootável | https://rufus.ie |
-| WinDirStat | O que está ocupando o disco | https://windirstat.net |
+| Notepad++ [OSS] | Editor de texto e logs | https://notepad-plus-plus.org |
+| Rufus [OSS] | Pendrive bootável | https://rufus.ie |
+| WinDirStat [OSS] | O que está ocupando o disco | https://windirstat.net |
 | CPU-Z | CPU, RAM e placa-mãe | https://www.cpuid.com |
 | HWiNFO | Sensores e temperaturas | https://www.hwinfo.com |
-| PuTTY | SSH, Telnet e serial | https://www.putty.org |
-| Wireshark | Captura de pacotes | https://www.wireshark.org |
-| PowerToys | Utilitários do Windows | https://learn.microsoft.com/windows/powertoys |
-| Chrome, Firefox, Acrobat Reader | Estação de usuário | Sites dos fabricantes |
+| LibreHardwareMonitor [OSS] | Temperaturas e sensores | https://github.com/LibreHardwareMonitor/LibreHardwareMonitor |
+| PuTTY [OSS] | SSH, Telnet e serial | https://www.putty.org |
+| WinSCP [OSS] | SFTP, SCP e FTP | https://winscp.net |
+| Wireshark [OSS] | Captura de pacotes | https://www.wireshark.org |
+| Bulk Crap Uninstaller [OSS] | Desinstalar vários programas e limpar restos | https://www.bcuninstaller.com |
+| KeePassXC [OSS] | Cofre de senhas offline | https://keepassxc.org |
+| ShareX [OSS] | Print e gravação de tela para o chamado | https://getsharex.com |
+| PowerToys [OSS] | Utilitários do Windows | https://learn.microsoft.com/windows/powertoys |
+| Windows Terminal [OSS] | Terminal com abas | https://github.com/microsoft/terminal |
+| PowerShell 7 [OSS] | Versão atual do PowerShell | https://github.com/PowerShell/PowerShell |
+| Firefox [OSS] | Navegador | https://www.mozilla.org/firefox |
+| SumatraPDF [OSS] | Leitor de PDF leve | https://www.sumatrapdfreader.org |
+| LibreOffice [OSS] | Pacote office gratuito | https://www.libreoffice.org |
+| VLC [OSS] | Player de áudio e vídeo | https://www.videolan.org |
+| Chrome, Acrobat Reader | Estação de usuário | Sites dos fabricantes |
 
 Há pacotes prontos: **P1** básico de campo, **P2** diagnóstico e **P3** estação de usuário.
 
