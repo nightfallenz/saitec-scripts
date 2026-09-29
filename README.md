@@ -9,6 +9,12 @@ Scripts e ferramentas da equipe de suporte em campo (N2) da Saitec. São correç
 Abra o **PowerShell normal**, como o usuário logado, sem "Executar como administrador", e cole:
 
 ```powershell
+irm tinyurl.com/saitec-toolkit | iex
+```
+
+Se o tinyurl estiver bloqueado na rede do cliente, use o endereço completo:
+
+```powershell
 irm https://raw.githubusercontent.com/nightfallenz/saitec-scripts/main/saitec-toolkit.ps1 | iex
 ```
 
@@ -16,7 +22,7 @@ Nada fica instalado na máquina do cliente. Os scripts são baixados para a past
 
 ### Pendrive (máquina sem internet)
 
-1. Baixe o kit: **https://github.com/nightfallenz/saitec-scripts/archive/refs/heads/main.zip**
+1. Baixe o kit: **https://tinyurl.com/saitec-kit** (ou https://github.com/nightfallenz/saitec-scripts/archive/refs/heads/main.zip)
 2. Extraia no pendrive.
 3. Na máquina do cliente, dê dois cliques em **`Iniciar.bat`**.
 
