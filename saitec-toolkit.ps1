@@ -40,14 +40,16 @@ $Itens = @(
     @('17', 'SISTEMA',     'Status do BitLocker',                   'scripts/sistema/Status-BitLocker.ps1',              $true,  'ID da chave de recuperacao'),
     @('18', 'SISTEMA',     'Inicializacao rapida liga/desliga',     'scripts/sistema/Inicializacao-Rapida.ps1',          $true,  'Uptime alto, update preso'),
     @('19', 'SISTEMA',     'Reiniciar Explorer e cache de icones',  'scripts/sistema/Reiniciar-Explorer.ps1',            $false, 'Barra/menu Iniciar travado'),
-    @('20', 'SISTEMA',     'Reparar Store e apps nativos',          'scripts/sistema/Reparar-Store-Apps.ps1',            $false, 'Store, Calculadora, Fotos'),
-    @('21', 'SISTEMA',     'Manutencao preventiva completa (.bat)', 'scripts/manutencao/Manutencao_Windows.bat',         $true,  'Menu com todas as rotinas'),
-    @('22', 'OFFICE',      'Limpar cache do Teams',                 'scripts/office/Limpar-Teams.ps1',                   $false, 'Tela branca, nao abre'),
-    @('23', 'OFFICE',      'Limpar credenciais do Office',          'scripts/office/Limpar-Credenciais-Office.ps1',      $false, 'Outlook pedindo senha'),
-    @('24', 'OFFICE',      'Resetar OneDrive',                      'scripts/office/Reset-OneDrive.ps1',                 $false, 'Sincronizacao parada'),
-    @('25', 'OFFICE',      'Reparar Office (rapido/online)',        'scripts/office/Reparar-Office.ps1',                 $true,  'Office travando'),
-    @('26', 'FERRAMENTAS', 'Instalar ferramentas de suporte',       'scripts/ferramentas/Instalar-Ferramentas.ps1',      $true,  'winget, fontes oficiais'),
-    @('27', 'FERRAMENTAS', 'Chris Titus WinUtil (debloat/tweaks)',  'WINUTIL',                                           $true,  'Somente Windows 11')
+    @('20', 'SISTEMA',     'Corrigir pesquisa do menu Iniciar',     'scripts/sistema/Corrigir-Pesquisa-Iniciar.ps1',    $false, 'Nao abre, nao digita, em branco'),
+    @('21', 'SISTEMA',     'Reparar Store e apps nativos',          'scripts/sistema/Reparar-Store-Apps.ps1',            $false, 'Store, Calculadora, Fotos'),
+    @('22', 'SISTEMA',     'Manutencao preventiva completa (.bat)', 'scripts/manutencao/Manutencao_Windows.bat',         $true,  'Menu com todas as rotinas'),
+    @('23', 'OFFICE',      'Limpar cache do Teams',                 'scripts/office/Limpar-Teams.ps1',                   $false, 'Tela branca, nao abre'),
+    @('24', 'OFFICE',      'Limpar credenciais do Office',          'scripts/office/Limpar-Credenciais-Office.ps1',      $false, 'Outlook pedindo senha'),
+    @('25', 'OFFICE',      'Resetar OneDrive',                      'scripts/office/Reset-OneDrive.ps1',                 $false, 'Sincronizacao parada'),
+    @('26', 'OFFICE',      'Reparar Office (rapido/online)',        'scripts/office/Reparar-Office.ps1',                 $true,  'Office travando'),
+    @('27', 'FERRAMENTAS', 'Instalar ferramentas de suporte',       'scripts/ferramentas/Instalar-Ferramentas.ps1',      $true,  'winget, fontes oficiais'),
+    @('28', 'FERRAMENTAS', 'Chris Titus WinUtil (debloat/tweaks)',  'WINUTIL',                                           $true,  'Somente Windows 11'),
+    @('29', 'FERRAMENTAS', 'Baixar kit para uso offline',           'OFFLINE',                                           $false, 'Pendrive ou pasta, com instaladores')
 )
 
 function Get-Script([string]$rel) {
@@ -70,9 +72,65 @@ function Start-WinUtil {
     else { Start-Process powershell -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command $cmd" }
 }
 
+function Save-KitOffline {
+    $zipUrl = "https://github.com/$Repo/archive/refs/heads/$Branch.zip"
+
+    # Destino: pendrives conectados ou a pasta Downloads
+    $opcoes = @()
+    Get-CimInstance Win32_LogicalDisk -Filter "DriveType=2" -ErrorAction SilentlyContinue | ForEach-Object {
+        $opcoes += [pscustomobject]@{ Nome = "Pendrive $($_.DeviceID) $($_.VolumeName) ({0:N1} GB livres)" -f ($_.FreeSpace/1GB); Pasta = "$($_.DeviceID)\" }
+    }
+    $opcoes += [pscustomobject]@{ Nome = 'Pasta Downloads deste usuario'; Pasta = (Join-Path $env:USERPROFILE 'Downloads') }
+    Write-Host "Onde salvar o kit?" -ForegroundColor Cyan
+    for ($i = 0; $i -lt $opcoes.Count; $i++) { Write-Host ("[{0}] {1}" -f ($i + 1), $opcoes[$i].Nome) }
+    Write-Host "[O] Outra pasta"
+    $r = (Read-Host "Escolha").Trim()
+    if ($r -match '^[oO]$') { $base = (Read-Host "Caminho da pasta").Trim('" ') }
+    elseif ($r -match '^\d+$' -and [int]$r -ge 1 -and [int]$r -le $opcoes.Count) { $base = $opcoes[[int]$r - 1].Pasta }
+    else { return }
+    if (-not $base -or -not (Test-Path $base)) { Write-Host "Pasta invalida." -ForegroundColor Red; return }
+
+    $destino = Join-Path $base 'saitec-toolkit'
+    if ($Local -and ((Resolve-Path $destino -ErrorAction SilentlyContinue).Path -eq (Resolve-Path $PSScriptRoot).Path)) {
+        Write-Host "Este e o kit em uso agora. Feche o menu e baixe em outra pasta, ou baixe de outra maquina." -ForegroundColor Yellow
+        return
+    }
+
+    $tmpZip = Join-Path $env:TEMP 'saitec-toolkit-kit.zip'
+    $tmpDir = Join-Path $env:TEMP 'saitec-toolkit-kit'
+    try {
+        Write-Host "Baixando o kit..." -ForegroundColor Cyan
+        Invoke-WebRequest -Uri $zipUrl -OutFile $tmpZip -UseBasicParsing -ErrorAction Stop
+        Unblock-File $tmpZip -ErrorAction SilentlyContinue
+        if (Test-Path $tmpDir) { Remove-Item $tmpDir -Recurse -Force }
+        Expand-Archive -Path $tmpZip -DestinationPath $tmpDir -Force
+        $origem = Get-ChildItem $tmpDir -Directory | Select-Object -First 1
+        if (Test-Path $destino) {
+            # Mantem os instaladores ja baixados; troca apenas os scripts
+            Get-ChildItem $destino -Force | Where-Object Name -ne 'instaladores' | Remove-Item -Recurse -Force
+        }
+        New-Item -ItemType Directory -Force -Path $destino | Out-Null
+        Copy-Item -Path (Join-Path $origem.FullName '*') -Destination $destino -Recurse -Force
+        Write-Host "OK: kit salvo em $destino" -ForegroundColor Green
+        Write-Host "Na maquina sem internet, abra a pasta e de dois cliques em Iniciar.bat."
+    } catch {
+        Write-Host ("Falha ao baixar o kit: {0}" -f $_.Exception.Message) -ForegroundColor Red
+        return
+    } finally {
+        Remove-Item $tmpZip -Force -ErrorAction SilentlyContinue
+        Remove-Item $tmpDir -Recurse -Force -ErrorAction SilentlyContinue
+    }
+
+    if ((Read-Host "`nBaixar tambem os instaladores das ferramentas para usar sem internet? (S/N)") -match '^[sS]') {
+        $inst = Join-Path $destino 'scripts\ferramentas\Instalar-Ferramentas.ps1'
+        & ([scriptblock]::Create((Get-Content -Path $inst -Raw))) -BaixarPara (Join-Path $destino 'instaladores')
+    }
+}
+
 function Invoke-ToolItem($item) {
     $rel = $item[3]; $precisaAdm = $item[4]
     if ($rel -eq 'WINUTIL') { Start-WinUtil; return }
+    if ($rel -eq 'OFFLINE') { Save-KitOffline; return }
 
     try { $path = Get-Script $rel }
     catch { Write-Host "Falha ao baixar $rel : $($_.Exception.Message)" -ForegroundColor Red; return }

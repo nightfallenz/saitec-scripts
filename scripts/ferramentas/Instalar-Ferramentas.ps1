@@ -4,8 +4,11 @@
 .NOTES
   Escolha por numero (ex.: 1,3,5), por pacote (P1, P2) ou T para todas.
   Requer Administrador e o winget (Instalador de Aplicativo da Microsoft Store).
+  Com -BaixarPara <pasta> apenas baixa os instaladores (uso offline), sem instalar.
 #>
-if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+param([string]$BaixarPara)
+
+if (-not $BaixarPara -and -not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     Write-Host "Execute como Administrador." -ForegroundColor Red; return
 }
 if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
@@ -72,11 +75,22 @@ if (-not $sel) { Write-Host "Nenhuma opcao valida."; return }
 $falhas = @()
 foreach ($n in $sel) {
     $a = $apps[$n - 1]
-    Write-Host ("`n-> Instalando {0}..." -f $a[0]) -ForegroundColor Cyan
-    winget install --id $a[1] --exact --silent --accept-package-agreements --accept-source-agreements --source winget
-    # 0 = instalado; -1978335189 = ja instalado/sem atualizacao
-    if ($LASTEXITCODE -ne 0 -and $LASTEXITCODE -ne -1978335189) { $falhas += $a[0] }
+    if ($BaixarPara) {
+        $pasta = Join-Path $BaixarPara ($a[0] -replace '[^\w\-\+ ]', '')
+        Write-Host ("`n-> Baixando instalador: {0}..." -f $a[0]) -ForegroundColor Cyan
+        winget download --id $a[1] --exact --download-directory $pasta --accept-package-agreements --accept-source-agreements --source winget
+        if ($LASTEXITCODE -ne 0) { $falhas += $a[0] }
+    } else {
+        Write-Host ("`n-> Instalando {0}..." -f $a[0]) -ForegroundColor Cyan
+        winget install --id $a[1] --exact --silent --accept-package-agreements --accept-source-agreements --source winget
+        # 0 = instalado; -1978335189 = ja instalado/sem atualizacao
+        if ($LASTEXITCODE -ne 0 -and $LASTEXITCODE -ne -1978335189) { $falhas += $a[0] }
+    }
 }
 
-if ($falhas) { Write-Host ("`nNao instalados: {0}" -f ($falhas -join ', ')) -ForegroundColor Yellow }
-else { Write-Host "`nOK: tudo instalado." -ForegroundColor Green }
+$acao = if ($BaixarPara) { 'baixados' } else { 'instalados' }
+if ($falhas) {
+    Write-Host ("`nNao {0}: {1}" -f $acao, ($falhas -join ', ')) -ForegroundColor Yellow
+    if ($BaixarPara) { Write-Host "Se todos falharam, atualize o winget (Instalador de Aplicativo na Microsoft Store): o comando 'winget download' exige a versao 1.8 ou superior." }
+} else { Write-Host ("`nOK: todos {0}." -f $acao) -ForegroundColor Green }
+if ($BaixarPara) { Write-Host "Instaladores em: $BaixarPara (cada programa em sua pasta; execute o instalador manualmente na maquina offline)." }

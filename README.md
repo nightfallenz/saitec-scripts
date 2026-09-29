@@ -22,6 +22,10 @@ Nada fica instalado na máquina do cliente. Os scripts são baixados para a past
 
 ### Pendrive (máquina sem internet)
 
+**Jeito mais fácil:** em uma máquina com internet, abra o menu online e escolha **29 - Baixar kit para uso offline**. Ele detecta o pendrive, salva o kit na pasta `saitec-toolkit` e pergunta se você quer baixar também os instaladores das ferramentas, que ficam em `saitec-toolkit\instaladores`. Rodar de novo atualiza os scripts e mantém os instaladores já baixados.
+
+**Ou manualmente:**
+
 1. Baixe o kit: **https://tinyurl.com/saitec-kit** (ou https://github.com/nightfallenz/saitec-scripts/archive/refs/heads/main.zip)
 2. Extraia no pendrive.
 3. Na máquina do cliente, dê dois cliques em **`Iniciar.bat`**.
@@ -60,16 +64,18 @@ Por isso o menu é aberto **sem** elevação. Se você abrir o PowerShell com a 
 | 17 | Sistema | `Status-BitLocker.ps1` | Status e ID da chave de recuperação |
 | 18 | Sistema | `Inicializacao-Rapida.ps1` | Uptime alto mesmo desligando, update que nunca termina |
 | 19 | Sistema | `Reiniciar-Explorer.ps1` | Barra de tarefas ou menu Iniciar travado, ícones errados |
-| 20 | Sistema | `Reparar-Store-Apps.ps1` | Store, Calculadora ou Fotos não abrem |
-| 21 | Sistema | `Manutencao_Windows.bat` | Manutenção preventiva completa, com menu próprio e log |
-| 22 | Office | `Limpar-Teams.ps1` | Teams com tela branca, não abre, loop de login |
-| 23 | Office | `Limpar-Credenciais-Office.ps1` | Outlook pedindo senha em loop, conta errada presa |
-| 24 | Office | `Reset-OneDrive.ps1` | Sincronização parada. Não apaga arquivos |
-| 25 | Office | `Reparar-Office.ps1` | Reparo rápido ou online do Microsoft 365 |
-| 26 | Ferramentas | `Instalar-Ferramentas.ps1` | Instala programas de suporte via winget |
-| 27 | Ferramentas | Chris Titus WinUtil | Debloat e otimização. Oficialmente só Windows 11 |
+| 20 | Sistema | `Corrigir-Pesquisa-Iniciar.ps1` | Pesquisa do menu Iniciar não abre, não deixa digitar ou fica em branco |
+| 21 | Sistema | `Reparar-Store-Apps.ps1` | Store, Calculadora ou Fotos não abrem |
+| 22 | Sistema | `Manutencao_Windows.bat` | Manutenção preventiva completa, com menu próprio e log |
+| 23 | Office | `Limpar-Teams.ps1` | Teams com tela branca, não abre, loop de login |
+| 24 | Office | `Limpar-Credenciais-Office.ps1` | Outlook pedindo senha em loop, conta errada presa |
+| 25 | Office | `Reset-OneDrive.ps1` | Sincronização parada. Não apaga arquivos |
+| 26 | Office | `Reparar-Office.ps1` | Reparo rápido ou online do Microsoft 365 |
+| 27 | Ferramentas | `Instalar-Ferramentas.ps1` | Instala programas de suporte via winget |
+| 28 | Ferramentas | Chris Titus WinUtil | Debloat e otimização. Oficialmente só Windows 11 |
+| 29 | Ferramentas | Baixar kit para uso offline | Salva o kit no pendrive ou em uma pasta e, se quiser, baixa os instaladores das ferramentas |
 
-## Ferramentas instaladas pelo menu (item 26)
+## Ferramentas instaladas pelo menu (item 27)
 
 Todas vêm do catálogo oficial do winget, direto da fonte de cada fabricante. **[OSS]** marca as de código aberto.
 
