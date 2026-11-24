@@ -19,6 +19,15 @@ if %errorlevel% neq 0 (
 :: ---------- Log ----------
 set "LOGDIR=C:\ManutencaoLogs"
 if not exist "%LOGDIR%" mkdir "%LOGDIR%"
+
+:: ---------- Rodar de fora da pasta TEMP ----------
+:: O toolkit baixa este .bat para %TEMP%, e a rotina de limpeza apaga o %TEMP%.
+:: Sem esta copia o .bat se apaga no meio da execucao e a janela fecha sozinha.
+if /i not "%~dp0"=="%LOGDIR%\" (
+    copy /y "%~f0" "%LOGDIR%\Manutencao_Windows.bat" >nul || (echo Falha ao copiar o script para %LOGDIR% & pause & exit /b 1)
+    call "%LOGDIR%\Manutencao_Windows.bat"
+    exit /b
+)
 for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyy-MM-dd_HH-mm"') do set "STAMP=%%i"
 set "LOG=%LOGDIR%\manutencao_%STAMP%.log"
 

@@ -67,6 +67,7 @@ Por isso o menu é aberto **sem** elevação. Se você abrir o PowerShell com a 
 | 20 | Sistema | `Corrigir-Pesquisa-Iniciar.ps1` | Pesquisa do menu Iniciar não abre, não deixa digitar ou fica em branco |
 | 21 | Sistema | `Reparar-Store-Apps.ps1` | Store, Calculadora ou Fotos não abrem |
 | 22 | Sistema | `Manutencao_Windows.bat` | Manutenção preventiva completa, com menu próprio e log |
+| 30 | Sistema | `Otimizar-Memoria.ps1` | Máquina lenta, pouca RAM. Mostra consumo, paginação e diagnóstico; ações (Explorer, encerrar PID, paginação) só com S/N |
 | 23 | Office | `Limpar-Teams.ps1` | Teams com tela branca, não abre, loop de login |
 | 24 | Office | `Limpar-Credenciais-Office.ps1` | Outlook pedindo senha em loop, conta errada presa |
 | 25 | Office | `Reset-OneDrive.ps1` | Sincronização parada. Não apaga arquivos |
