@@ -44,6 +44,7 @@ $Itens = @(
     @('21', 'SISTEMA',     'Reparar Store e apps nativos',          'scripts/sistema/Reparar-Store-Apps.ps1',            $false, 'Store, Calculadora, Fotos'),
     @('22', 'SISTEMA',     'Manutencao preventiva completa (.bat)', 'scripts/manutencao/Manutencao_Windows.bat',         $true,  'Menu com todas as rotinas'),
     @('30', 'SISTEMA',     'Diagnostico de memoria (RAM)',          'scripts/sistema/Otimizar-Memoria.ps1',              $true,  'Lento, pouca RAM, paginacao'),
+    @('31', 'SISTEMA',     'Nunca bloquear o computador',           'scripts/sistema/Nunca-Bloquear.ps1',                $false, 'Tela apaga/bloqueia sozinha'),
     @('23', 'OFFICE',      'Limpar cache do Teams',                'scripts/office/Limpar-Teams.ps1',                   $false, 'Tela branca, nao abre'),
     @('24', 'OFFICE',      'Limpar credenciais do Office',          'scripts/office/Limpar-Credenciais-Office.ps1',      $false, 'Outlook pedindo senha'),
     @('25', 'OFFICE',      'Resetar OneDrive',                      'scripts/office/Reset-OneDrive.ps1',                 $false, 'Sincronizacao parada'),
